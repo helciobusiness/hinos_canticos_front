@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['favicon.svg', 'favicon.png', 'favicon.ico', 'robots.txt', 'logo_black.png', 'logo_white.png', 'icons/*.png', 'data/hinos.json'],
       manifest: {
         name: 'Hinos & Cânticos — IEIA',

@@ -5,13 +5,16 @@ import { Navbar } from '../components/Navbar';
 import { BottomNav } from '../components/BottomNav';
 import { InstallModal } from '../components/InstallModal';
 import { ShareAppModal } from '../components/ShareAppModal';
+import { SyncButton } from '../components/UpdateBanner';
 import { useTheme } from '../hooks/useTheme';
+import { useAppUpdater } from '../hooks/useAppUpdater';
 
 export const MainLayout: React.FC = () => {
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
   const [isShareAppModalOpen, setIsShareAppModalOpen] = useState(false);
   const [isOffline, setIsOffline] = useState(typeof navigator !== 'undefined' ? !navigator.onLine : false);
   const { logoSrc } = useTheme();
+  const { isUpdating, checkForUpdate } = useAppUpdater();
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
@@ -83,24 +86,30 @@ export const MainLayout: React.FC = () => {
           Hinos & Cânticos • Leitura Diurna & Noturna • PWA 100% Offline
         </p>
 
-        {/* Botão de Partilha com QR Code no rodapé */}
-        <button
-          onClick={() => setIsShareAppModalOpen(true)}
-          className="btn btn-secondary"
-          style={{
-            marginTop: 6,
-            padding: '7px 16px',
-            fontSize: '0.82rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 7,
-            borderRadius: 'var(--radius-full)',
-          }}
-          title="Partilhar aplicativo e baixar QR Code para a congregação"
-        >
-          <QrCode size={16} color="var(--red-primary)" />
-          <span>Partilhar Hinário & QR Code</span>
-        </button>
+        {/* Botões de rodapé: Partilha e Sincronização */}
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 6 }}>
+          <button
+            onClick={() => setIsShareAppModalOpen(true)}
+            className="btn btn-secondary"
+            style={{
+              padding: '7px 16px',
+              fontSize: '0.82rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 7,
+              borderRadius: 'var(--radius-full)',
+            }}
+            title="Partilhar aplicativo e baixar QR Code para a congregação"
+          >
+            <QrCode size={16} color="var(--red-primary)" />
+            <span>Partilhar Hinário & QR Code</span>
+          </button>
+
+          <SyncButton
+            isUpdating={isUpdating}
+            onCheck={checkForUpdate}
+          />
+        </div>
       </footer>
 
       <BottomNav onOpenInstallModal={() => setIsInstallModalOpen(true)} />

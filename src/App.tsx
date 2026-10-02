@@ -9,10 +9,14 @@ import { FavoritesPage } from './pages/FavoritesPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { InstallPage } from './pages/InstallPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { UpdateBanner } from './components/UpdateBanner';
+import { useAppUpdater } from './hooks/useAppUpdater';
 
-export const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const { needsRefresh, isOfflineReady, isUpdating, applyUpdate, dismiss } = useAppUpdater();
+
   return (
-    <ToastProvider>
+    <>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainLayout />}>
@@ -26,6 +30,23 @@ export const App: React.FC = () => {
           </Route>
         </Routes>
       </BrowserRouter>
+
+      {/* Banner global de atualização — aparece quando uma nova versão é detectada */}
+      <UpdateBanner
+        needsRefresh={needsRefresh}
+        isOfflineReady={isOfflineReady}
+        isUpdating={isUpdating}
+        onApply={applyUpdate}
+        onDismiss={dismiss}
+      />
+    </>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <ToastProvider>
+      <AppContent />
     </ToastProvider>
   );
 };
