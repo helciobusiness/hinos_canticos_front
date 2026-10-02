@@ -274,12 +274,9 @@ export const HymnDetailPage: React.FC = () => {
   return (
     <article
       className={`reader-container ${isWorshipMode ? 'worship-mode-active' : ''}`}
-      style={{ maxWidth: 740, margin: '0 auto' }}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      style={isWorshipMode ? undefined : { maxWidth: 740, margin: '0 auto' }}
     >
-      {/* Botão de Saída do Modo Culto (Discreto e fixo no topo se ativo) */}
+      {/* Botão de Saída do Modo Culto — sticky no topo, sempre visível */}
       {isWorshipMode && (
         <div className="worship-mode-header-bar">
           <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>
@@ -295,97 +292,106 @@ export const HymnDetailPage: React.FC = () => {
         </div>
       )}
 
+      {/* Wrapper de scroll interno (só activo no Modo Culto) */}
+      <div
+        className={isWorshipMode ? 'worship-mode-scroll-body' : ''}
+        style={isWorshipMode ? undefined : { maxWidth: 740, margin: '0 auto' }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+
       {/* Toolbar Superior Editorial de Leitura */}
       {!isWorshipMode && (
         <div className="reader-toolbar">
-          <button
-            onClick={() => navigate(-1)}
-            className="btn btn-ghost"
-            style={{ padding: '6px 10px', fontSize: '0.85rem' }}
-            aria-label="Voltar"
-          >
-            <ArrowLeft size={16} /> Início
-          </button>
+          {/* Linha 1: Navegação + Ações */}
+          <div className="reader-toolbar-row">
+            <button
+              onClick={() => navigate('/')}
+              className="btn btn-ghost"
+              style={{ padding: '6px 10px', fontSize: '0.85rem' }}
+              aria-label="Voltar para o início"
+            >
+              <ArrowLeft size={16} /> Início
+            </button>
 
-          {/* Salto Rápido de Hino Inline */}
-          <button
-            onClick={() => setShowJumpModal(true)}
-            className="reader-jump-chip"
-            title="Mudar rapidamente de hino"
-          >
-            <Hash size={14} />
-            <span>Hino {hino.numero}</span>
-          </button>
+            <button
+              onClick={() => setShowJumpModal(true)}
+              className="reader-jump-chip"
+              title="Mudar rapidamente de hino"
+            >
+              <Hash size={14} />
+              <span>Hino {hino.numero}</span>
+            </button>
 
-          {/* Controles de Leitura: Tamanho, Fonte, Modo Culto, Favoritos e Partilha */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div className="reader-controls-bar">
+            {/* Ações rápidas — sempre visíveis */}
+            <div className="reader-toolbar-actions">
               <button
-                onClick={() => changeFontSize(-1)}
-                disabled={fontSize === 'xs'}
-                className="font-size-btn"
-                title="Diminuir texto (A-)"
-                aria-label="Diminuir texto"
+                onClick={() => {
+                  setIsWorshipMode(true);
+                  showToast('Modo Culto ativado — Ecrã limpo para cantar!', 'info');
+                }}
+                className="worship-mode-btn"
+                title="Ativar Modo Culto (Ecrã limpo sem distracções para cantar)"
+                aria-label="Ativar Modo Culto"
               >
-                A-
+                <BookOpen size={15} />
+                <span className="worship-mode-btn__label">Modo Culto</span>
               </button>
-              <span className="font-size-indicator" title="Escala da letra">
-                {FONT_SCALES[fontSize]?.label || '100%'}
-              </span>
+
               <button
-                onClick={() => changeFontSize(1)}
-                disabled={fontSize === 'xxl'}
-                className="font-size-btn"
-                title="Aumentar texto (A+)"
-                aria-label="Aumentar texto"
+                onClick={handleToggleFavorite}
+                className="icon-btn"
+                style={{ color: favorited ? 'var(--red-primary)' : 'inherit' }}
+                aria-label={favorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+                title={favorited ? 'Remover dos favoritos' : 'Favoritar'}
               >
-                A+
+                <Heart size={20} fill={favorited ? 'currentColor' : 'none'} />
               </button>
-              <div style={{ width: 1, height: 16, background: 'var(--border-subtle)', margin: '0 2px' }} />
+
               <button
-                onClick={toggleFontFamily}
-                className="font-size-btn"
-                style={{ display: 'flex', alignItems: 'center', gap: 4 }}
-                title={fontFamily === 'sans' ? 'Mudar para fonte clássica (Serifada)' : 'Mudar para fonte moderna (Sans)'}
+                onClick={() => setIsShareOpen(true)}
+                className="icon-btn"
+                aria-label="Partilhar hino"
+                title="Partilhar"
               >
-                <Type size={14} />
-                <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>{fontFamily === 'sans' ? 'Sans' : 'Serif'}</span>
+                <Share2 size={20} />
               </button>
             </div>
+          </div>
 
-            {/* Botão Modo Culto em Destaque na Toolbar */}
+          {/* Linha 2: Controles de tipografia */}
+          <div className="reader-controls-bar">
             <button
-              onClick={() => {
-                setIsWorshipMode(true);
-                showToast('Modo Culto ativado — Ecrã limpo para cantar!', 'info');
-              }}
-              className="worship-mode-btn"
-              title="Ativar Modo Culto (Ecrã limpo sem distrações para cantar)"
-              aria-label="Ativar Modo Culto"
+              onClick={() => changeFontSize(-1)}
+              disabled={fontSize === 'xs'}
+              className="font-size-btn"
+              title="Diminuir texto (A-)"
+              aria-label="Diminuir texto"
             >
-              <BookOpen size={15} />
-              <span>Modo Culto</span>
+              A-
             </button>
-
-            {/* Favorito */}
+            <span className="font-size-indicator" title="Escala da letra">
+              {FONT_SCALES[fontSize]?.label || '100%'}
+            </span>
             <button
-              onClick={handleToggleFavorite}
-              className="icon-btn"
-              style={{ color: favorited ? 'var(--red-primary)' : 'inherit' }}
-              aria-label={favorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
-              title={favorited ? 'Remover dos favoritos' : 'Favoritar'}
+              onClick={() => changeFontSize(1)}
+              disabled={fontSize === 'xxl'}
+              className="font-size-btn"
+              title="Aumentar texto (A+)"
+              aria-label="Aumentar texto"
             >
-              <Heart size={20} fill={favorited ? 'currentColor' : 'none'} />
+              A+
             </button>
-
-            {/* Partilha */}
+            <div style={{ width: 1, height: 16, background: 'var(--border-subtle)', margin: '0 2px' }} />
             <button
-              onClick={() => setIsShareOpen(true)}
-              className="icon-btn"
-              aria-label="Partilhar hino"
-              title="Partilhar"
+              onClick={toggleFontFamily}
+              className="font-size-btn"
+              style={{ display: 'flex', alignItems: 'center', gap: 4 }}
+              title={fontFamily === 'sans' ? 'Mudar para fonte clássica (Serifada)' : 'Mudar para fonte moderna (Sans)'}
             >
-              <Share2 size={20} />
+              <Type size={14} />
+              <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>{fontFamily === 'sans' ? 'Sans' : 'Serif'}</span>
             </button>
           </div>
         </div>
@@ -585,6 +591,7 @@ export const HymnDetailPage: React.FC = () => {
         titulo={hino.titulo}
         autor={hino.autor}
       />
+      </div>{/* fim: worship-mode-scroll-body / inner wrapper */}
     </article>
   );
 };
