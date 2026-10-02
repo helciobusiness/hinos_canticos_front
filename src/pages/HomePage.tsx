@@ -61,9 +61,11 @@ export const HomePage: React.FC = () => {
     setCurrentPage(1);
   };
 
+  const [showNumberPad, setShowNumberPad] = useState(false);
+
   return (
     <div className="home-editorial-container">
-      {/* Cabeçalho Reverente Editorial do Hinário */}
+      {/* Cabecalho Editorial do Hinario */}
       <section className="hymnal-hero-editorial">
         <div className="hero-editorial-badge">
           <BookOpen size={14} />
@@ -78,29 +80,33 @@ export const HomePage: React.FC = () => {
           Edição Digital Oficial • 581 Hinos da Fé Cristã e Canto Congregacional
         </p>
 
-        {/* Módulo de Salto Rápido e Pesquisa */}
-        <div className="hero-quick-access-box">
-          <div
+        {/* Barra de Acesso Rápido Compacta */}
+        <div className="hero-compact-actions">
+          <button
             onClick={() => navigate('/pesquisar')}
-            className="editorial-search-bar"
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && navigate('/pesquisar')}
+            className="compact-search-pill"
+            aria-label="Pesquisar hinos"
           >
-            <Search size={18} className="search-bar-icon" />
-            <span className="search-bar-placeholder">
-              Pesquisar por número, título ou letra...
-            </span>
-            <span className="search-bar-btn">
-              Buscar
-            </span>
-          </div>
+            <Search size={16} />
+            <span>Pesquisar hinos...</span>
+          </button>
 
-          {/* Seletor Numérico Tátil Embutido */}
-          <div style={{ marginTop: 12 }}>
-            <QuickNumberPad />
-          </div>
+          <button
+            onClick={() => setShowNumberPad((v) => !v)}
+            className={`compact-number-pill ${showNumberPad ? 'active' : ''}`}
+            aria-label="Ir para número"
+            title="Abrir hino por número"
+          >
+            <Hash size={16} />
+            <span>Ir para Nº</span>
+          </button>
         </div>
+
+        {showNumberPad && (
+          <div className="hero-numberpad-drawer">
+            <QuickNumberPad isModal onClose={() => setShowNumberPad(false)} />
+          </div>
+        )}
       </section>
 
       {/* Faixa de Hinos Recentes e Favoritos */}

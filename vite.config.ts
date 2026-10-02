@@ -70,7 +70,9 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
+            urlPattern: ({ url }) =>
+              url.pathname.startsWith('/api/') ||
+              url.hostname === 'hinoscanticosapi-production.up.railway.app',
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-hinos-cache',

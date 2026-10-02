@@ -1027,51 +1027,121 @@ html.dark .hymnal-hero-editorial {
   line-height: 1.45;
 }
 
-.hero-quick-access-box {
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.editorial-search-bar {
+/* Compact hero action pills */
+.hero-compact-actions {
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.compact-search-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: var(--bg-card);
   border: 1.5px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 6px 6px 6px 14px;
+  border-radius: var(--radius-full);
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
   cursor: pointer;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: all var(--transition-fast);
   box-shadow: var(--shadow-sm);
+  flex: 1;
+  max-width: 260px;
+  min-width: 160px;
+  text-align: left;
+  white-space: nowrap;
 }
 
-.editorial-search-bar:hover {
-  border-color: var(--red-primary);
-  box-shadow: 0 4px 14px rgba(200, 29, 37, 0.12);
-}
-
-.search-bar-icon {
+.compact-search-pill svg {
   color: var(--red-primary);
   flex-shrink: 0;
 }
 
-.search-bar-placeholder {
-  color: var(--text-muted);
-  font-size: 0.88rem;
-  flex: 1;
-  text-align: left;
-  user-select: none;
+.compact-search-pill:hover {
+  border-color: var(--red-primary);
+  color: var(--text-primary);
+  box-shadow: 0 4px 14px rgba(200, 29, 37, 0.12);
 }
 
-.search-bar-btn {
-  background: var(--red-primary);
-  color: #FFFFFF;
-  font-size: 0.82rem;
+.compact-number-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 10px 18px;
+  font-size: 0.88rem;
   font-weight: 600;
-  padding: 7px 14px;
-  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
   flex-shrink: 0;
 }
+
+.compact-number-pill svg {
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.compact-number-pill:hover,
+.compact-number-pill.active {
+  background: var(--red-primary);
+  border-color: var(--red-primary);
+  color: #fff;
+  box-shadow: var(--shadow-red);
+}
+
+.compact-number-pill:hover svg,
+.compact-number-pill.active svg {
+  color: #fff;
+}
+
+/* Drawer animado do number pad */
+.hero-numberpad-drawer {
+  margin-top: 16px;
+  animation: drawerSlideDown 200ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-md);
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@keyframes drawerSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html.dark .compact-search-pill,
+html.dark .compact-number-pill {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+}
+
+html.dark .hero-numberpad-drawer {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+}
+
 
 /* Quick Number Pad Component */
 .quick-pad-container {
