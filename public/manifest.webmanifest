@@ -1,0 +1,61 @@
+{
+  "name": "Hinos & Cânticos — IEIA",
+  "short_name": "Hinos & Cânticos",
+  "description": "Consulte, pesquise, leia, guarde nos favoritos e partilhe os hinos e cânticos da Igreja Evangélica dos Irmãos em Angola (IEIA).",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#C81D25",
+  "orientation": "portrait-primary",
+  "lang": "pt",
+  "categories": ["books", "lifestyle", "music"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/logo_white.png",
+      "sizes": "2000x2000",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo_black.png",
+      "sizes": "2000x2000",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pesquisar Hinos",
+      "short_name": "Pesquisar",
+      "description": "Buscar hino por número, título ou letra",
+      "url": "/pesquisar",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Hinos Favoritos",
+      "short_name": "Favoritos",
+      "description": "Acessar seus hinos favoritos guardados",
+      "url": "/favoritos",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
