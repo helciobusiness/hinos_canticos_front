@@ -16,46 +16,52 @@ export interface AppUpdateState {
   checkForUpdate: () => Promise<void>;
 }
 
+// Intervalo de verificação automática: 30 minutos
+const CHECK_INTERVAL_MS = 30 * 60 * 1000;
+
 export function useAppUpdater(): AppUpdateState {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isOfflineReady, setIsOfflineReady] = useState(false);
 
   const {
     needRefresh: [needsRefresh, setNeedsRefresh],
-    offlineReady: [offlineReadyRaw, setOfflineReady],
+    offlineReady: [, setOfflineReady],
     updateServiceWorker,
-    // Gives access to the SW registration for manual update checks
+    getSWRegistration,
   } = useRegisterSW({
-    onRegistered(r) {
-      if (r) {
-        // Verifica atualizações a cada 60 minutos enquanto o app está aberto
-        setInterval(() => {
-          r.update();
-        }, 60 * 60 * 1000);
-      }
+    onRegistered(registration) {
+      if (!registration) return;
+
+      // Verificação periódica a cada 30 min (app pode ficar dias aberta no telemóvel)
+      const interval = setInterval(() => {
+        registration.update().catch(() => {});
+      }, CHECK_INTERVAL_MS);
+
+      // Verifica imediatamente ao registar (apanha updates instalados enquanto offline)
+      registration.update().catch(() => {});
+
+      return () => clearInterval(interval);
     },
     onNeedRefresh() {
-      // Já gerido pelo needRefresh state acima
+      // Gerido pelo estado needRefresh
     },
     onOfflineReady() {
       setIsOfflineReady(true);
-      // Esconde o banner offline após 4 segundos
-      setTimeout(() => setIsOfflineReady(false), 4000);
+      setTimeout(() => setIsOfflineReady(false), 5000);
+    },
+    onRegisterError(error) {
+      console.warn('[PWA] Erro ao registar Service Worker:', error);
     },
   });
-
-  // Sincroniza estado externo de offline ready
-  useEffect(() => {
-    if (offlineReadyRaw) {
-      setIsOfflineReady(true);
-      setTimeout(() => setIsOfflineReady(false), 4000);
-    }
-  }, [offlineReadyRaw]);
 
   const applyUpdate = useCallback(async () => {
     setIsUpdating(true);
     try {
+      // Envia SKIP_WAITING ao SW em espera e força recarga
       await updateServiceWorker(true);
+    } catch {
+      // Fallback: força recarga direta
+      window.location.reload();
     } finally {
       setIsUpdating(false);
     }
@@ -68,19 +74,55 @@ export function useAppUpdater(): AppUpdateState {
   }, [setNeedsRefresh, setOfflineReady]);
 
   const checkForUpdate = useCallback(async () => {
-    if ('serviceWorker' in navigator) {
-      const reg = await navigator.serviceWorker.getRegistration();
-      if (reg) {
-        setIsUpdating(true);
-        try {
-          await reg.update();
-        } finally {
-          // Se não houver nova versão, setIsUpdating volta a false após 1.5s
-          setTimeout(() => setIsUpdating(false), 1500);
+    setIsUpdating(true);
+    try {
+      // Tenta obter registo via hook primeiro, senão usa API nativa
+      let registration: ServiceWorkerRegistration | undefined;
+      try {
+        registration = await getSWRegistration();
+      } catch {
+        // getSWRegistration pode não existir em versões mais antigas
+      }
+
+      if (!registration && 'serviceWorker' in navigator) {
+        registration = await navigator.serviceWorker.getRegistration();
+      }
+
+      if (registration) {
+        await registration.update();
+        // Se houver SW esperando, notifica o utilizador
+        if (registration.waiting) {
+          setNeedsRefresh(true);
         }
       }
+    } catch (err) {
+      console.warn('[PWA] Erro ao verificar atualização:', err);
+    } finally {
+      // Mantém o spinner por 1.5s para feedback visual
+      setTimeout(() => setIsUpdating(false), 1500);
     }
-  }, []);
+  }, [getSWRegistration, setNeedsRefresh]);
+
+  // Verifica quando o utilizador volta ao app (visibilidade do documento)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkForUpdate().catch(() => {});
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [checkForUpdate]);
+
+  // Verifica quando fica online depois de estar offline
+  useEffect(() => {
+    const handleOnline = () => {
+      checkForUpdate().catch(() => {});
+    };
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
+  }, [checkForUpdate]);
 
   return {
     needsRefresh,

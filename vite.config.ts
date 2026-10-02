@@ -52,17 +52,23 @@ export default defineConfig({
         ],
       },
       workbox: {
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB para garantir cache integral do hinos.json
+        // CRITICAL: Novo SW ativa imediatamente sem esperar todas as abas fecharem
+        skipWaiting: true,
+        // CRITICAL: Novo SW toma controlo de todos os clientes abertos
+        clientsClaim: true,
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,json}'],
         runtimeCaching: [
           {
+            // hinos.json: StaleWhileRevalidate — serve cache imediatamente mas
+            // atualiza em segundo plano para que a próxima visita tenha dados frescos
             urlPattern: ({ url }) => url.pathname.includes('/data/hinos.json'),
-            handler: 'CacheFirst',
+            handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'hinos-data-cache',
               expiration: {
                 maxEntries: 1,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 ano
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 7 dias (renova automaticamente)
               },
               cacheableResponse: {
                 statuses: [0, 200],
