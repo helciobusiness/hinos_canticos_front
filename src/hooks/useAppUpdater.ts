@@ -27,7 +27,6 @@ export function useAppUpdater(): AppUpdateState {
     needRefresh: [needsRefresh, setNeedsRefresh],
     offlineReady: [, setOfflineReady],
     updateServiceWorker,
-    getSWRegistration,
   } = useRegisterSW({
     onRegistered(registration) {
       if (!registration) return;
@@ -76,15 +75,9 @@ export function useAppUpdater(): AppUpdateState {
   const checkForUpdate = useCallback(async () => {
     setIsUpdating(true);
     try {
-      // Tenta obter registo via hook primeiro, senão usa API nativa
+      // Usa a API nativa para obter o registo do Service Worker
       let registration: ServiceWorkerRegistration | undefined;
-      try {
-        registration = await getSWRegistration();
-      } catch {
-        // getSWRegistration pode não existir em versões mais antigas
-      }
-
-      if (!registration && 'serviceWorker' in navigator) {
+      if ('serviceWorker' in navigator) {
         registration = await navigator.serviceWorker.getRegistration();
       }
 
@@ -101,7 +94,7 @@ export function useAppUpdater(): AppUpdateState {
       // Mantém o spinner por 1.5s para feedback visual
       setTimeout(() => setIsUpdating(false), 1500);
     }
-  }, [getSWRegistration, setNeedsRefresh]);
+  }, [setNeedsRefresh]);
 
   // Verifica quando o utilizador volta ao app (visibilidade do documento)
   useEffect(() => {
