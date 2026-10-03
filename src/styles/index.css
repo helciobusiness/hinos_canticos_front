@@ -43,15 +43,15 @@
   --shadow-red: 0 8px 20px -4px rgba(200, 29, 37, 0.35);
 
   /* Dimensões e Layout */
-  --header-height: 64px;
+  --header-height: 56px;
   --bottom-nav-height: 68px;
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
   --radius-full: 9999px;
   
-  /* Fontes */
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Fontes — Tipografia Nativa Refinada (Apple SF Pro no iOS, Plus Jakarta Sans em outros) */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Plus Jakarta Sans", system-ui, sans-serif;
   --font-serif: 'Lora', Georgia, Cambria, 'Times New Roman', Times, serif;
 
   /* Transições */
@@ -198,11 +198,12 @@ input, select, textarea {
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 50;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   background-color: var(--bg-glass);
   border-bottom: 1px solid var(--border-subtle);
+  padding-top: env(safe-area-inset-top, 0px);
   transition: background-color var(--transition-normal), border-color var(--transition-normal);
 }
 
@@ -213,76 +214,132 @@ input, select, textarea {
   height: var(--header-height);
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 16px;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .navbar-inner {
+    padding: 0 24px;
+    gap: 16px;
+  }
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: -0.02em;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 1.02rem;
+  letter-spacing: -0.015em;
+  text-decoration: none;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 .brand-logo-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@media (min-width: 768px) {
+  .brand-logo-container {
+    width: 38px;
+    height: 38px;
+  }
+}
+
 .navbar-brand:hover .brand-logo-container {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .brand-logo-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
-}
-
-.brand-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  background: var(--red-gradient);
-  color: #FFFFFF;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-red);
+  filter: drop-shadow(0 2px 5px rgba(200, 29, 37, 0.2));
 }
 
 .brand-title {
   display: flex;
-  flex-direction: column;
-  line-height: 1.1;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .brand-title .main {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
-  font-size: 1.02rem;
-  letter-spacing: -0.01em;
+  font-size: 0.98rem;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .brand-title .main {
+    font-size: 1.05rem;
+  }
 }
 
 .brand-title .sub {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: var(--red-primary);
-  font-weight: 500;
-  letter-spacing: 0.05em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  background: var(--red-tint);
+  padding: 1px 5px;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Ações do Navbar — Botões Ergonómicos Compactos */
+.navbar-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 10px;
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.navbar-action-btn:hover {
+  background-color: var(--bg-card-hover);
+  color: var(--text-primary);
+  border-color: var(--border-focus);
+}
+
+@media (max-width: 767px) {
+  .navbar-action-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+  }
+  .navbar-btn-label {
+    display: none;
+  }
 }
 
 .nav-desktop-links {
@@ -382,11 +439,11 @@ input, select, textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 9px 16px;
-  font-size: 0.9rem;
-  font-weight: 550;
-  border-radius: var(--radius-md);
+  gap: 7px;
+  padding: 8px 15px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  border-radius: var(--radius-full);
   transition: all var(--transition-normal);
   user-select: none;
 }
@@ -431,9 +488,9 @@ input, select, textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
   color: var(--text-secondary);
   background-color: var(--bg-card);
   border: 1px solid var(--border-card);
@@ -1046,54 +1103,62 @@ input, select, textarea {
 /* Hero Editorial */
 .hymnal-hero-editorial {
   position: relative;
-  background: linear-gradient(135deg, rgba(200, 29, 37, 0.05) 0%, rgba(200, 29, 37, 0.12) 100%);
-  border: 1px solid rgba(200, 29, 37, 0.16);
+  background: linear-gradient(135deg, rgba(200, 29, 37, 0.04) 0%, rgba(200, 29, 37, 0.09) 100%);
+  border: 1px solid rgba(200, 29, 37, 0.14);
   border-radius: var(--radius-lg);
-  padding: 32px 24px 28px;
+  padding: 20px 16px 18px;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 20px -4px rgba(200, 29, 37, 0.08);
+  box-shadow: 0 4px 20px -4px rgba(200, 29, 37, 0.06);
+}
+
+@media (min-width: 768px) {
+  .hymnal-hero-editorial {
+    padding: 28px 24px 24px;
+    margin-bottom: 24px;
+  }
 }
 
 html.dark .hymnal-hero-editorial {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.06) 0%, rgba(185, 28, 28, 0.14) 100%);
-  border-color: rgba(239, 68, 68, 0.2);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(185, 28, 28, 0.12) 100%);
+  border-color: rgba(239, 68, 68, 0.18);
 }
 
 .hero-editorial-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 5px 14px;
+  gap: 6px;
+  padding: 4px 12px;
   background: var(--bg-card);
-  border: 1px solid rgba(200, 29, 37, 0.2);
+  border: 1px solid rgba(200, 29, 37, 0.18);
   border-radius: var(--radius-full);
   color: var(--red-primary);
-  font-size: 0.78rem;
-  font-weight: 650;
+  font-size: 0.74rem;
+  font-weight: 550;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   box-shadow: var(--shadow-sm);
 }
 
 .hero-editorial-title {
   font-family: var(--font-sans);
-  font-size: clamp(1.8rem, 4.5vw, 2.4rem);
-  font-weight: 800;
-  letter-spacing: -0.025em;
+  font-size: clamp(1.4rem, 3.8vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
   color: var(--text-primary);
   margin: 0 0 6px;
   line-height: 1.15;
 }
 
 .hero-editorial-subtitle {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 450;
   color: var(--text-secondary);
-  max-width: 520px;
-  margin: 0 auto 22px;
-  line-height: 1.45;
+  max-width: 500px;
+  margin: 0 auto 16px;
+  line-height: 1.4;
 }
 
 /* Compact hero action pills */
@@ -1491,14 +1556,14 @@ html.dark .hero-numberpad-drawer {
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
-  padding: 10px 14px;
-  font-size: 0.88rem;
-  font-weight: 650;
+  padding: 8px 12px;
+  font-size: 0.84rem;
+  font-weight: 550;
   color: var(--text-secondary);
   cursor: pointer;
   white-space: nowrap;
   transition: all var(--transition-fast);
-  min-height: 42px;
+  min-height: 38px;
   touch-action: manipulation;
   user-select: none;
   flex-shrink: 0;

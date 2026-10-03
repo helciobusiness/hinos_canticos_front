@@ -37,15 +37,7 @@ export const MainLayout: React.FC = () => {
   }, []);
 
   return (
-    <div className="app-container safe-top">
-      {/* Banner de Atualização do PWA (aparece sempre que há nova versão para o telemóvel) */}
-      <UpdateBanner
-        needsRefresh={needsRefresh}
-        isOfflineReady={isOfflineReady}
-        isUpdating={isUpdating}
-        onApply={applyUpdate}
-        onDismiss={dismiss}
-      />
+    <div className="app-container">
       {isOffline && (
         <div
           style={{
@@ -90,9 +82,9 @@ export const MainLayout: React.FC = () => {
         }}
       >
         <img
-          src={logoSrc}
-          alt="IEIA"
-          style={{ width: 44, height: 44, objectFit: 'contain', opacity: 0.9 }}
+          src="/logo_emblem.png"
+          alt="IEIA — Hinos & Cânticos"
+          style={{ width: 44, height: 44, objectFit: 'contain' }}
         />
         <p style={{ fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
           Igreja Evangélica dos Irmãos em Angola (IEIA)

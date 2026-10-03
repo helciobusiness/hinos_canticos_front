@@ -22,9 +22,9 @@ export const Navbar: React.FC<{
   return (
     <header className="navbar">
       <div className="navbar-inner">
-        <Link to="/" className="navbar-brand">
+        <Link to="/" className="navbar-brand" title="Hinos & Cânticos — Início">
           <div className="brand-logo-container">
-            <img src={logoSrc} alt="IEIA" className="brand-logo-img" />
+            <img src="/logo_emblem.png" alt="Hinos & Cânticos" className="brand-logo-img" />
           </div>
           <div className="brand-title">
             <span className="main">Hinos & Cânticos</span>
@@ -37,13 +37,13 @@ export const Navbar: React.FC<{
             Início
           </Link>
           <Link to="/pesquisar" className={`nav-link ${isActive('/pesquisar') ? 'active' : ''}`}>
-            <Search size={16} /> Pesquisar
+            <Search size={15} /> Pesquisar
           </Link>
           <Link to="/favoritos" className={`nav-link ${isActive('/favoritos') ? 'active' : ''}`}>
-            <Heart size={16} /> Favoritos
+            <Heart size={15} /> Favoritos
           </Link>
           <Link to="/historico" className={`nav-link ${isActive('/historico') ? 'active' : ''}`}>
-            <Clock size={16} /> Histórico
+            <Clock size={15} /> Histórico
           </Link>
         </nav>
 
@@ -51,23 +51,23 @@ export const Navbar: React.FC<{
           {/* Botão de Partilha com QR Code */}
           <button
             onClick={onOpenShareAppModal}
-            className="btn btn-secondary navbar-share-btn"
+            className="navbar-action-btn"
             title="Partilhar aplicativo e baixar QR Code"
             aria-label="Partilhar aplicativo"
           >
             <QrCode size={16} color="var(--red-primary)" />
-            <span className="navbar-share-label">Partilhar</span>
+            <span className="navbar-btn-label">Partilhar</span>
           </button>
 
           {!isInstalled && (
             <button
               onClick={onOpenInstallModal}
-              className="btn btn-secondary"
-              style={{ padding: '7px 12px', fontSize: '0.82rem' }}
+              className="navbar-action-btn"
               title="Instalar Hinos & Cânticos no seu dispositivo"
+              aria-label="Instalar aplicativo"
             >
               <Download size={15} color="var(--red-primary)" />
-              <span className="navbar-install-label">Instalar</span>
+              <span className="navbar-btn-label">Instalar</span>
             </button>
           )}
 
