@@ -2047,15 +2047,15 @@ html.dark .hero-numberpad-drawer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  /* Margem generosa de segurança abaixo da Dynamic Island do iPhone 14 Pro Max (59px) */
-  padding-top: max(62px, env(safe-area-inset-top, 62px));
-  padding-bottom: 14px;
-  padding-left: max(16px, env(safe-area-inset-left, 16px));
-  padding-right: max(16px, env(safe-area-inset-right, 16px));
+  gap: 10px;
+  /* Margem exata e ergonómica abaixo da Dynamic Island (54px) / Safe Area */
+  padding-top: calc(env(safe-area-inset-top, 0px) + 6px);
+  padding-bottom: 8px;
+  padding-left: max(14px, env(safe-area-inset-left, 14px));
+  padding-right: max(14px, env(safe-area-inset-right, 14px));
   background-color: var(--bg-card);
-  border-bottom: 2px solid var(--border-subtle);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   z-index: 50;
   width: 100%;
   box-sizing: border-box;
@@ -2064,8 +2064,8 @@ html.dark .hero-numberpad-drawer {
 html.dark .worship-mode-header-bar,
 [data-theme="dark"] .worship-mode-header-bar {
   background-color: #151A23;
-  border-bottom: 2px solid #222A38;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid #222A38;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
 }
 
 .worship-mode-header-info {
@@ -2077,21 +2077,21 @@ html.dark .worship-mode-header-bar,
 }
 
 .worship-mode-badge {
-  font-size: 0.72rem;
-  font-weight: 850;
-  letter-spacing: 0.06em;
-  padding: 4px 9px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
   background: var(--red-primary);
   color: #FFFFFF;
   border-radius: var(--radius-full);
   white-space: nowrap;
   flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(200, 29, 37, 0.35);
+  box-shadow: 0 2px 6px rgba(200, 29, 37, 0.3);
 }
 
 .worship-mode-title {
-  font-size: 0.94rem;
-  font-weight: 750;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2102,7 +2102,7 @@ html.dark .worship-mode-header-bar,
 .worship-mode-header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
@@ -2111,9 +2111,9 @@ html.dark .worship-mode-header-bar,
   align-items: center;
   gap: 2px;
   background: var(--bg-app);
-  border: 1.5px solid var(--border-card);
+  border: 1px solid var(--border-card);
   border-radius: var(--radius-full);
-  padding: 3px 6px;
+  padding: 2px 4px;
   box-shadow: var(--shadow-sm);
 }
 
@@ -2124,9 +2124,9 @@ html.dark .worship-font-controls,
 }
 
 .worship-font-btn {
-  padding: 5px 10px;
-  font-size: 0.82rem;
-  font-weight: 750;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
   color: var(--text-primary);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -2146,25 +2146,25 @@ html.dark .worship-font-controls,
 .worship-exit-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: var(--red-primary);
   color: #FFFFFF;
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
-  font-size: 0.84rem;
-  font-weight: 750;
-  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 13px;
   border-radius: var(--radius-full);
   cursor: pointer;
-  box-shadow: 0 3px 12px rgba(200, 29, 37, 0.4);
+  box-shadow: 0 2px 10px rgba(200, 29, 37, 0.35);
   transition: all var(--transition-fast);
   flex-shrink: 0;
-  min-height: 38px;
+  min-height: 32px;
 }
 
 .worship-exit-btn:hover {
   background: var(--red-hover);
   transform: translateY(-1px);
-  box-shadow: 0 5px 16px rgba(200, 29, 37, 0.55);
+  box-shadow: 0 4px 14px rgba(200, 29, 37, 0.5);
 }
 
 .worship-exit-btn:active {
