@@ -1950,24 +1950,31 @@ html.dark .hero-numberpad-drawer {
   touch-action: pan-y;
 }
 
-/* Barra Superior Fixa do Modo Culto */
+/* Barra Superior Fixa do Modo Culto — Ultra Nítida e de Alto Contraste */
 .worship-mode-header-bar {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  /* Espaço generoso para iPhones com Dynamic Island (54px) e notch */
-  padding-top: max(54px, env(safe-area-inset-top, 54px));
-  padding-bottom: 12px;
+  gap: 12px;
+  /* Margem generosa de segurança abaixo da Dynamic Island do iPhone 14 Pro Max (59px) */
+  padding-top: max(62px, env(safe-area-inset-top, 62px));
+  padding-bottom: 14px;
   padding-left: max(16px, env(safe-area-inset-left, 16px));
   padding-right: max(16px, env(safe-area-inset-right, 16px));
-  background-color: var(--bg-surface);
-  border-bottom: 1px solid var(--border-subtle);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-  z-index: 20;
+  background-color: var(--bg-card);
+  border-bottom: 2px solid var(--border-subtle);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  z-index: 50;
   width: 100%;
   box-sizing: border-box;
+}
+
+html.dark .worship-mode-header-bar,
+[data-theme="dark"] .worship-mode-header-bar {
+  background-color: #151A23;
+  border-bottom: 2px solid #222A38;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
 }
 
 .worship-mode-header-info {
@@ -1979,24 +1986,26 @@ html.dark .hero-numberpad-drawer {
 }
 
 .worship-mode-badge {
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  padding: 3px 7px;
-  background: var(--red-tint);
-  color: var(--red-primary);
-  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  padding: 4px 9px;
+  background: var(--red-primary);
+  color: #FFFFFF;
+  border-radius: var(--radius-full);
   white-space: nowrap;
   flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(200, 29, 37, 0.35);
 }
 
 .worship-mode-title {
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: 0.94rem;
+  font-weight: 750;
   color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
 .worship-mode-header-actions {
@@ -2010,17 +2019,24 @@ html.dark .hero-numberpad-drawer {
   display: flex;
   align-items: center;
   gap: 2px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
+  background: var(--bg-app);
+  border: 1.5px solid var(--border-card);
   border-radius: var(--radius-full);
-  padding: 2px 4px;
+  padding: 3px 6px;
+  box-shadow: var(--shadow-sm);
+}
+
+html.dark .worship-font-controls,
+[data-theme="dark"] .worship-font-controls {
+  background: #0B0E14;
+  border-color: #242D3D;
 }
 
 .worship-font-btn {
-  padding: 4px 8px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-secondary);
+  padding: 5px 10px;
+  font-size: 0.82rem;
+  font-weight: 750;
+  color: var(--text-primary);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -2032,7 +2048,7 @@ html.dark .hero-numberpad-drawer {
 }
 
 .worship-font-btn:disabled {
-  opacity: 0.35;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
@@ -2042,22 +2058,22 @@ html.dark .hero-numberpad-drawer {
   gap: 6px;
   background: var(--red-primary);
   color: #FFFFFF;
-  border: none;
-  font-size: 0.82rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  font-size: 0.84rem;
   font-weight: 750;
-  padding: 7px 14px;
+  padding: 8px 16px;
   border-radius: var(--radius-full);
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(200, 29, 37, 0.3);
+  box-shadow: 0 3px 12px rgba(200, 29, 37, 0.4);
   transition: all var(--transition-fast);
   flex-shrink: 0;
-  min-height: 36px;
+  min-height: 38px;
 }
 
 .worship-exit-btn:hover {
   background: var(--red-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(200, 29, 37, 0.45);
+  box-shadow: 0 5px 16px rgba(200, 29, 37, 0.55);
 }
 
 .worship-exit-btn:active {
