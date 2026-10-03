@@ -39,13 +39,13 @@ export default defineConfig({
           },
           {
             src: '/logo_white.png',
-            sizes: '2000x2000',
+            sizes: '677x369',
             type: 'image/png',
             purpose: 'any',
           },
           {
             src: '/logo_black.png',
-            sizes: '2000x2000',
+            sizes: '677x369',
             type: 'image/png',
             purpose: 'any',
           },
