@@ -520,6 +520,43 @@ export const HymnDetailPage: React.FC = () => {
             <span>Partilhar</span>
           </button>
         </div>
+
+        {/* Barra de Ajuste de Letra em Destaque no Cabeçalho (A- e A+) */}
+        <div className="reader-hero-font-bar">
+          <span className="hero-font-title">Letra:</span>
+          <div className="hero-font-stepper">
+            <button
+              onClick={() => changeFontSize(-1)}
+              disabled={fontSize === 'xs'}
+              className="hero-font-btn"
+              title="Diminuir letra"
+              aria-label="Diminuir tamanho da letra"
+            >
+              A-
+            </button>
+            <span className="hero-font-indicator">
+              {FONT_SCALES[fontSize]?.label || '100%'}
+            </span>
+            <button
+              onClick={() => changeFontSize(1)}
+              disabled={fontSize === 'xxl'}
+              className="hero-font-btn"
+              title="Aumentar letra"
+              aria-label="Aumentar tamanho da letra"
+            >
+              A+
+            </button>
+          </div>
+
+          <button
+            onClick={toggleFontFamily}
+            className="hero-font-family-chip"
+            title="Alternar estilo da fonte (Serifada / Sem Serifa)"
+          >
+            <Type size={14} />
+            <span>{fontFamily === 'serif' ? 'Serifada' : 'Sans'}</span>
+          </button>
+        </div>
       </header>
 
       {/* Dica de navegação por deslize (Aparece de forma suave) */}
@@ -611,22 +648,6 @@ export const HymnDetailPage: React.FC = () => {
         )}
       </footer>
 
-      {/* Botão Flutuante de Modo Culto (Sempre visível enquanto canta e rola) */}
-      {!isWorshipMode && (
-        <button
-          onClick={() => {
-            setIsWorshipMode(true);
-            showToast('Modo Culto ativado — Ecrã limpo para cantar!', 'info');
-          }}
-          className="floating-worship-btn"
-          title="Ativar Modo Culto em Tela Cheia"
-          aria-label="Ativar Modo Culto"
-        >
-          <BookOpen size={18} />
-          <span>Modo Culto</span>
-        </button>
-      )}
-
       {/* Modal de Salto Rápido de Hino */}
       {showJumpModal && (
         <div className="modal-backdrop" onClick={() => setShowJumpModal(false)}>
@@ -656,18 +677,23 @@ export const HymnDetailPage: React.FC = () => {
       />
       </div>{/* fim: worship-mode-scroll-body / inner wrapper */}
 
-      {/* Botão Flutuante Inferior para Sair do Modo Culto a qualquer momento com um toque */}
-      {isWorshipMode && (
-        <button
-          onClick={() => setIsWorshipMode(false)}
-          className="worship-floating-bottom-exit-btn"
-          title="Sair do Modo Culto"
-          aria-label="Sair do Modo Culto"
-        >
-          <Minimize2 size={16} />
-          <span>Sair do Modo Culto</span>
-        </button>
-      )}
+      {/* Botão Flutuante Unificado (FAB) — Ativa e Desativa o Modo Culto no mesmo botão, ergonômico para o polegar */}
+      <button
+        onClick={() => {
+          const next = !isWorshipMode;
+          setIsWorshipMode(next);
+          showToast(
+            next ? 'Modo Culto ativado — Ecrã limpo para cantar!' : 'Modo Culto desativado',
+            'info'
+          );
+        }}
+        className={`floating-worship-btn ${isWorshipMode ? 'is-active' : ''}`}
+        title={isWorshipMode ? 'Sair do Modo Culto' : 'Ativar Modo Culto em Tela Cheia'}
+        aria-label={isWorshipMode ? 'Sair do Modo Culto' : 'Ativar Modo Culto'}
+      >
+        {isWorshipMode ? <Minimize2 size={18} /> : <BookOpen size={18} />}
+        <span>{isWorshipMode ? 'Sair do Culto' : 'Modo Culto'}</span>
+      </button>
     </article>
   );
 };

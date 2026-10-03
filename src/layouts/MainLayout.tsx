@@ -5,7 +5,7 @@ import { Navbar } from '../components/Navbar';
 import { BottomNav } from '../components/BottomNav';
 import { InstallModal } from '../components/InstallModal';
 import { ShareAppModal } from '../components/ShareAppModal';
-import { SyncButton } from '../components/UpdateBanner';
+import { UpdateBanner, SyncButton } from '../components/UpdateBanner';
 import { useTheme } from '../hooks/useTheme';
 import { useAppUpdater } from '../hooks/useAppUpdater';
 
@@ -14,7 +14,14 @@ export const MainLayout: React.FC = () => {
   const [isShareAppModalOpen, setIsShareAppModalOpen] = useState(false);
   const [isOffline, setIsOffline] = useState(typeof navigator !== 'undefined' ? !navigator.onLine : false);
   const { logoSrc } = useTheme();
-  const { isUpdating, checkForUpdate } = useAppUpdater();
+  const {
+    needsRefresh,
+    isOfflineReady,
+    isUpdating,
+    applyUpdate,
+    dismiss,
+    checkForUpdate,
+  } = useAppUpdater();
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
@@ -31,6 +38,14 @@ export const MainLayout: React.FC = () => {
 
   return (
     <div className="app-container safe-top">
+      {/* Banner de Atualização do PWA (aparece sempre que há nova versão para o telemóvel) */}
+      <UpdateBanner
+        needsRefresh={needsRefresh}
+        isOfflineReady={isOfflineReady}
+        isUpdating={isUpdating}
+        onApply={applyUpdate}
+        onDismiss={dismiss}
+      />
       {isOffline && (
         <div
           style={{
