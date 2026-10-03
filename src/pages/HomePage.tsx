@@ -169,33 +169,42 @@ export const HomePage: React.FC = () => {
       )}
 
       {/* Barra de Abas de Navegação Congregacional */}
-      <div className="hymnal-nav-tabs">
+      <div className="hymnal-nav-tabs" role="tablist" aria-label="Modos de visualização do hinário">
         <button
           type="button"
+          role="tab"
+          aria-selected={activeTab === 'todos'}
           onClick={() => setActiveTab('todos')}
           className={`tab-btn ${activeTab === 'todos' ? 'active' : ''}`}
         >
           <BookOpen size={16} />
-          <span>Todos os Hinos</span>
+          <span className="tab-label-full">Todos os Hinos</span>
+          <span className="tab-label-short">Todos</span>
           <span className="tab-counter">581</span>
         </button>
 
         <button
           type="button"
+          role="tab"
+          aria-selected={activeTab === 'indice'}
           onClick={() => setActiveTab('indice')}
           className={`tab-btn ${activeTab === 'indice' ? 'active' : ''}`}
         >
           <ListOrdered size={16} />
-          <span>Índice Numérico</span>
+          <span className="tab-label-full">Índice Numérico</span>
+          <span className="tab-label-short">Índice</span>
         </button>
 
         <button
           type="button"
+          role="tab"
+          aria-selected={activeTab === 'temas'}
           onClick={() => setActiveTab('temas')}
           className={`tab-btn ${activeTab === 'temas' ? 'active' : ''}`}
         >
           <Layers size={16} />
-          <span>Temas & Assuntos</span>
+          <span className="tab-label-full">Temas & Assuntos</span>
+          <span className="tab-label-short">Temas</span>
         </button>
       </div>
 

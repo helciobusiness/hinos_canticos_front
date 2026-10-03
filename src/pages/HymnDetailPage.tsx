@@ -27,12 +27,12 @@ type FontSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 type FontFamily = 'sans' | 'serif';
 
 const FONT_SCALES: Record<FontSize, { label: string; size: string; lineHeight: string }> = {
-  xs: { label: '85%', size: '0.96rem', lineHeight: '1.68' },
-  sm: { label: '92%', size: '1.05rem', lineHeight: '1.74' },
-  md: { label: '100%', size: '1.16rem', lineHeight: '1.82' },
-  lg: { label: '115%', size: '1.34rem', lineHeight: '1.9' },
-  xl: { label: '130%', size: '1.54rem', lineHeight: '2.0' },
-  xxl: { label: '150%', size: '1.80rem', lineHeight: '2.1' },
+  xs: { label: '90%', size: '1.02rem', lineHeight: '1.68' },
+  sm: { label: '95%', size: '1.10rem', lineHeight: '1.74' },
+  md: { label: '100%', size: '1.20rem', lineHeight: '1.82' },
+  lg: { label: '115%', size: '1.38rem', lineHeight: '1.9' },
+  xl: { label: '130%', size: '1.58rem', lineHeight: '2.0' },
+  xxl: { label: '150%', size: '1.85rem', lineHeight: '2.1' },
 };
 
 const FONT_SIZE_KEYS: FontSize[] = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'];
@@ -120,33 +120,67 @@ export const HymnDetailPage: React.FC = () => {
     };
   }, [numero]);
 
-  // Gestos de Touch para virar página
+  // Trancar scroll do fundo e permitir tecla Escape / botão Voltar do telemóvel para sair do Modo Culto
+  useEffect(() => {
+    if (!isWorshipMode) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsWorshipMode(false);
+      }
+    };
+
+    window.history.pushState({ worshipMode: true }, '');
+    const handlePopState = () => {
+      setIsWorshipMode(false);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isWorshipMode]);
+
+  // Gestos de Touch para virar página (desativados durante Modo Culto para não atrapalhar leitura)
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length > 1) return;
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     isHorizontalSwipe.current = null;
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (isWorshipMode) return;
+    if (e.touches.length > 1) return;
+
     if (isHorizontalSwipe.current === null) {
       const deltaX = Math.abs(e.touches[0].clientX - touchStartX.current);
       const deltaY = Math.abs(e.touches[0].clientY - touchStartY.current);
-      if (deltaX > 8 || deltaY > 8) {
-        isHorizontalSwipe.current = deltaX > deltaY;
+      if (deltaX > 24 || deltaY > 24) {
+        isHorizontalSwipe.current = deltaX > deltaY * 1.8;
       }
     }
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
+    if (isWorshipMode) return;
     if (isHorizontalSwipe.current) {
       const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-      // Deslizar para a esquerda (> 75px) = Hino Seguinte
-      if (deltaX < -75 && hino?.seguinte) {
+      const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY.current);
+      // Deslizar para a esquerda (> 90px) = Hino Seguinte
+      if (deltaX < -90 && deltaY < 80 && hino?.seguinte) {
         navigate(`/hino/${formatHinoNumero(hino.seguinte.numero)}`);
         showToast(`Hino ${hino.seguinte.numero}`, 'info');
       }
-      // Deslizar para a direita (> 75px) = Hino Anterior
-      else if (deltaX > 75 && hino?.anterior) {
+      // Deslizar para a direita (> 90px) = Hino Anterior
+      else if (deltaX > 90 && deltaY < 80 && hino?.anterior) {
         navigate(`/hino/${formatHinoNumero(hino.anterior.numero)}`);
         showToast(`Hino ${hino.anterior.numero}`, 'info');
       }
@@ -276,19 +310,48 @@ export const HymnDetailPage: React.FC = () => {
       className={`reader-container ${isWorshipMode ? 'worship-mode-active' : ''}`}
       style={isWorshipMode ? undefined : { maxWidth: 740, margin: '0 auto' }}
     >
-      {/* Botão de Saída do Modo Culto — sticky no topo, sempre visível */}
+      {/* Barra de Saída do Modo Culto — Sempre visível no topo, respeita Safe Area / Notches */}
       {isWorshipMode && (
         <div className="worship-mode-header-bar">
-          <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-            Modo Culto • Hino {formatHinoNumero(hino.numero)}
-          </span>
-          <button
-            onClick={() => setIsWorshipMode(false)}
-            className="worship-exit-btn"
-            title="Sair do Modo Culto"
-          >
-            <Minimize2 size={16} /> Sair do Modo Culto
-          </button>
+          <div className="worship-mode-header-info">
+            <span className="worship-mode-badge">MODO CULTO</span>
+            <span className="worship-mode-title" title={`${formatHinoNumero(hino.numero)} • ${hino.titulo}`}>
+              {formatHinoNumero(hino.numero)} • {hino.titulo}
+            </span>
+          </div>
+
+          <div className="worship-mode-header-actions">
+            <div className="worship-font-controls">
+              <button
+                onClick={() => changeFontSize(-1)}
+                disabled={fontSize === 'xs'}
+                className="worship-font-btn"
+                title="Diminuir letra"
+                aria-label="Diminuir letra"
+              >
+                A-
+              </button>
+              <button
+                onClick={() => changeFontSize(1)}
+                disabled={fontSize === 'xxl'}
+                className="worship-font-btn"
+                title="Aumentar letra"
+                aria-label="Aumentar letra"
+              >
+                A+
+              </button>
+            </div>
+
+            <button
+              onClick={() => setIsWorshipMode(false)}
+              className="worship-exit-btn"
+              title="Sair do Modo Culto"
+              aria-label="Sair do Modo Culto"
+            >
+              <Minimize2 size={16} />
+              <span className="worship-exit-btn-text">Sair</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -476,8 +539,8 @@ export const HymnDetailPage: React.FC = () => {
                 className="chorus-block editorial-chorus"
                 role="region"
                 aria-label="Coro"
-                onClick={(e) => copyStanza(e, estrofe.texto, 'Coro')}
-                title="Toque para copiar o Coro"
+                onClick={!isWorshipMode ? (e) => copyStanza(e, estrofe.texto, 'Coro') : undefined}
+                title={!isWorshipMode ? 'Toque para copiar o Coro' : undefined}
               >
                 <div className="chorus-badge">
                   <Sparkles size={13} />
@@ -494,8 +557,8 @@ export const HymnDetailPage: React.FC = () => {
             <div
               key={estrofe.id}
               className="stanza-block editorial-stanza"
-              onClick={(e) => copyStanza(e, estrofe.texto, estrofe.numero)}
-              title={`Toque para copiar a Estrofe ${estrofe.numero}`}
+              onClick={!isWorshipMode ? (e) => copyStanza(e, estrofe.texto, estrofe.numero) : undefined}
+              title={!isWorshipMode ? `Toque para copiar a Estrofe ${estrofe.numero}` : undefined}
             >
               <div className="stanza-header">
                 <span className="stanza-drop-number">{estrofe.numero}</span>
@@ -592,6 +655,19 @@ export const HymnDetailPage: React.FC = () => {
         autor={hino.autor}
       />
       </div>{/* fim: worship-mode-scroll-body / inner wrapper */}
+
+      {/* Botão Flutuante Inferior para Sair do Modo Culto a qualquer momento com um toque */}
+      {isWorshipMode && (
+        <button
+          onClick={() => setIsWorshipMode(false)}
+          className="worship-floating-bottom-exit-btn"
+          title="Sair do Modo Culto"
+          aria-label="Sair do Modo Culto"
+        >
+          <Minimize2 size={16} />
+          <span>Sair do Modo Culto</span>
+        </button>
+      )}
     </article>
   );
 };
