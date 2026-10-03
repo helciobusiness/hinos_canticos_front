@@ -24,11 +24,12 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const showToast = useCallback((message: string, type: ToastType = 'success') => {
     const id = Math.random().toString(36).substring(2, 9);
-    setToasts((prev) => [...prev, { id, message, type }]);
+    // Mantém no máximo os 2 toasts mais recentes para não poluir a tela
+    setToasts((prev) => [...prev.slice(-1), { id, message, type }]);
 
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3500);
+    }, 3000);
   }, []);
 
   const removeToast = (id: string) => {

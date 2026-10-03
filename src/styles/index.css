@@ -875,13 +875,30 @@ input, select, textarea {
 
 .toast-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 150;
+  /* Garante que fica perfeitamente visível abaixo da Dynamic Island do iPhone (59px) */
+  top: max(74px, calc(env(safe-area-inset-top, 0px) + 18px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10002;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
   pointer-events: none;
+  width: calc(100% - 32px);
+  max-width: 440px;
+}
+
+@media (min-width: 768px) {
+  .toast-container {
+    top: 24px;
+    right: 24px;
+    left: auto;
+    transform: none;
+    width: auto;
+    max-width: 460px;
+    align-items: flex-end;
+  }
 }
 
 .toast {
@@ -891,19 +908,28 @@ input, select, textarea {
   padding: 12px 18px;
   background-color: var(--bg-card);
   color: var(--text-primary);
-  border: 1px solid var(--border-card);
-  border-left: 4px solid var(--red-primary);
+  border: 1.5px solid var(--border-card);
+  border-left: 4.5px solid var(--red-primary);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  font-size: 0.9rem;
-  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-size: 0.88rem;
+  font-weight: 650;
   pointer-events: auto;
-  animation: slideInRight 250ms ease;
+  animation: toastSlideDown 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-@keyframes slideInRight {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+@keyframes toastSlideDown {
+  from {
+    transform: translateY(-16px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
 /* ==========================================================================
