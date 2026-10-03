@@ -51,7 +51,7 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
               Igreja Evangélica dos Irmãos em Angola
             </p>
             <span style={{ fontSize: '0.74rem', color: 'var(--red-primary)', fontWeight: 600 }}>
-              Aplicação Web Progressiva (PWA)
+              Aplicativo Oficial • 100% Offline
             </span>
           </div>
         </div>

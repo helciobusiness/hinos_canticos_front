@@ -90,7 +90,7 @@ export const MainLayout: React.FC = () => {
           Igreja Evangélica dos Irmãos em Angola (IEIA)
         </p>
         <p style={{ margin: 0, fontSize: '0.78rem' }}>
-          Hinos & Cânticos • Leitura Diurna & Noturna • PWA 100% Offline
+          Hinos & Cânticos • Leitura Diurna & Noturna • 100% Offline
         </p>
 
         {/* Botões de rodapé: Partilha e Sincronização */}
